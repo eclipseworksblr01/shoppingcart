@@ -3,8 +3,10 @@ package com.shoppingcart.service.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Random;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +17,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.shoppingcart.exception.NotEnoughProductsInStockException;
 import com.shoppingcart.model.Product;
 import com.shoppingcart.repository.ProductRepository;
-import com.shoppingcart.service.ShoppingCartService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ShoppingCartServiceImplTest {
@@ -24,7 +25,7 @@ public class ShoppingCartServiceImplTest {
     ProductRepository productRepository;
 
     @InjectMocks
-    ShoppingCartService shoppingCartService;
+    ShoppingCartServiceImpl shoppingCartService;
 
     @Before
     public void setUp() {
@@ -38,6 +39,7 @@ public class ShoppingCartServiceImplTest {
     public void testAdd() {
         assertEquals(shoppingCartService.getProductsInCart().size(), 0);
         Product product = new Product();
+        product.setId(new Random().nextLong());
         testInternalAdd(product);
         assertEquals(shoppingCartService.getProductsInCart().size(), 1);
     }
@@ -45,6 +47,7 @@ public class ShoppingCartServiceImplTest {
     @Test
     public void testRemove() {
         Product product = new Product();
+        product.setId(new Random().nextLong());
         testInternalAdd(product);
         assertEquals(shoppingCartService.getProductsInCart().size(), 1);
         shoppingCartService.remove(product);
@@ -63,7 +66,11 @@ public class ShoppingCartServiceImplTest {
     public void testCheckout() {
         try {
             Product product = new Product();
+            product.setQuantity(10);
+            long nextLong = new Random().nextLong();
+            product.setId(nextLong);
             testInternalAdd(product);
+            when(productRepository.findOne(nextLong)).thenReturn(product);
             shoppingCartService.checkout();
             Map<Product, Integer> productsInCart = shoppingCartService.getProductsInCart();
             assertNotNull(productsInCart);
@@ -71,6 +78,26 @@ public class ShoppingCartServiceImplTest {
         } catch (NotEnoughProductsInStockException e) {
             assertTrue(false);
         }
+    }
+
+    @Test
+    public void testCheckoutNotEnoughProducts() {
+        try {
+            Product product = new Product();
+            product.setQuantity(0);
+            long nextLong = new Random().nextLong();
+            product.setId(nextLong);
+            testInternalAdd(product);
+            when(productRepository.findOne(nextLong)).thenReturn(product);
+            shoppingCartService.checkout();
+            Map<Product, Integer> productsInCart = shoppingCartService.getProductsInCart();
+            assertNotNull(productsInCart);
+            assertEquals(productsInCart.size(), 0);
+        } catch (NotEnoughProductsInStockException e) {
+            assertTrue(true);
+            return;
+        }
+        assertTrue(false);
     }
 
     @Test

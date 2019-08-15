@@ -75,7 +75,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         Product product;
         for (Map.Entry<Product, Integer> entry : products.entrySet()) {
             product = productRepository.findOne(entry.getKey().getId());
-            if (product.getQuantity() < entry.getValue()) {
+            if (entry.getValue() > product.getQuantity()) {
                 throw new NotEnoughProductsInStockException(product);
             }
             entry.getKey().setQuantity(product.getQuantity() - entry.getValue());
