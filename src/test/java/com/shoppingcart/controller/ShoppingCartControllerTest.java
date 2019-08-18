@@ -1,17 +1,18 @@
 package com.shoppingcart.controller;
 
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +45,9 @@ public class ShoppingCartControllerTest {
     public void setUp() {
         productMapping = new HashMap<Product, Integer>();
         Product product1 = new Product();
+        product1.setId(new Random().nextLong());
         Product product2 = new Product();
+        product2.setId(new Random().nextLong());
         productMapping.put(product1, 25);
         productMapping.put(product2, 26);
         when(shoppingCartService.getProductsInCart()).thenReturn(productMapping);
@@ -55,6 +58,7 @@ public class ShoppingCartControllerTest {
     @After
     public void tearDown() {
         productMapping.clear();
+        productMapping = null;
     }
 
     @Test
@@ -62,8 +66,9 @@ public class ShoppingCartControllerTest {
         ModelAndView modelAndView = shoppingCartController.shoppingCart();
         assertNotNull(modelAndView);
         ModelMap modelMap = modelAndView.getModelMap();
-        assertNotEquals(productMapping, modelMap.get("products"));
-        assertNotEquals(2, modelMap.get("total"));
+        assertEquals(productMapping, modelMap.get("products"));
+        assertNotNull((String) modelMap.get("total"));
+        assertEquals(Integer.parseInt((String) modelMap.get("total")), 2);
     }
 
     @Test
@@ -76,7 +81,7 @@ public class ShoppingCartControllerTest {
     @Test
     public void testRemoveProductFromCart() {
         Long productId = new Long(25);
-        shoppingCartController.addProductToCart(productId);
+        shoppingCartController.removeProductFromCart(productId);
         verify(shoppingCartService, times(1)).remove(any());
     }
 
