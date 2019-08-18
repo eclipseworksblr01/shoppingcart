@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 @Controller
@@ -33,11 +35,13 @@ public class RegistrationController {
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public ModelAndView createNewUser(@Valid User user, BindingResult bindingResult) {
-        if (userService.findByEmail(user.getEmail()).isPresent()) {
+        Optional<User> optionalUser = userService.findByEmail(user.getEmail());
+        if (optionalUser.isPresent()) {
             bindingResult.rejectValue("email", "error.user",
                     "There is already a user registered with the email provided");
         }
-        if (userService.findByUsername(user.getUsername()).isPresent()) {
+        optionalUser = userService.findByUsername(user.getUsername());
+        if (optionalUser.isPresent()) {
             bindingResult.rejectValue("username", "error.user",
                     "There is already a user registered with the username provided");
         }
