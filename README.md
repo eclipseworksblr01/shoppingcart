@@ -28,7 +28,8 @@ This is a shopping-cart application which has payments integration using stripe.
 
 5) The repository layer consisting of three repository for product,user and roles. 
 
-6) The sequence of calls from UI is of the following pattern 
+6) The unit tests are done using mockito and code coverage is done with cobertura. The unit tests is done 
+at every layer i.e Controller,Service and Spring Boot Application.
 
 ## Technical Stack Choices
 
