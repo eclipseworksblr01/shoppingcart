@@ -5,9 +5,7 @@
 This is a shopping-cart application which has payments integration using stripe.  It also uses the combination of Spring + Thymeleaf. Users can shop for products. Each user has his own shopping cart (session functionality).
 Checkout is transactional. The payment service integration is with stripe. There is an additional  login and registration functionality also included. 
 
-## Design
-
-##Components
+## Component Design
 
 1) Controller Implementations(HomeController,LoginController,ShoppingCartController)
 
