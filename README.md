@@ -7,6 +7,20 @@ Checkout is transactional. The payment service integration is with stripe. There
 
 ## Design
 
+#Components
+
+1) Controller
+
+2) Service Implementations 
+
+3) Repository in JPA
+
+4) Model Layer 
+
+5) ExceptionAdvices for Exception Handling
+
+# Salient points in the design
+
 1) This is an spring boot application built with an authentication mechanism. 
 
 2) The login,home-page loading and checkout and payments are reflected with corresponding controllers in the Controller Layer in the design. 
