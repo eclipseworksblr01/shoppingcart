@@ -3,6 +3,8 @@ package com.shoppingcart.controller;
 import com.shoppingcart.model.Pager;
 import com.shoppingcart.model.Product;
 import com.shoppingcart.service.ProductService;
+
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +20,8 @@ public class HomeController {
     private static final int INITIAL_PAGE = 0;
 
     private final ProductService productService;
+    
+    private final Logger logger = Logger.getLogger(HomeController.class);
 
     @Autowired
     public HomeController(ProductService productService) {

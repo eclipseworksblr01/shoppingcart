@@ -29,3 +29,12 @@ a:hover, a:focus, a:active {
     display: block;
     text-align: center;
 }
+
+body {
+	font-family: 'arial';
+}
+
+#checkout-form input, #checkout-form button {
+	display: block;
+	margin: 12px;
+}

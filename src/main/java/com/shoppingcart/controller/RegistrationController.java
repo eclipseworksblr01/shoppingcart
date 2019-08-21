@@ -3,6 +3,7 @@ package com.shoppingcart.controller;
 import com.shoppingcart.model.User;
 import com.shoppingcart.service.UserService;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,8 @@ import javax.validation.Valid;
 public class RegistrationController {
 
     private final UserService userService;
+    
+    private final Logger logger = Logger.getLogger(RegistrationController.class);
 
     @Autowired
     public RegistrationController(UserService userService) {

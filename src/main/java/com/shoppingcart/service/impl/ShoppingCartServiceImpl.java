@@ -5,6 +5,7 @@ import com.shoppingcart.model.Product;
 import com.shoppingcart.repository.ProductRepository;
 import com.shoppingcart.service.ShoppingCartService;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -21,14 +22,12 @@ import java.util.Map;
 @Transactional
 public class ShoppingCartServiceImpl implements ShoppingCartService {
 
-    private final ProductRepository productRepository;
+    @Autowired
+    ProductRepository productRepository;
 
     private Map<Product, Integer> products = new HashMap<>();
 
-    @Autowired
-    public ShoppingCartServiceImpl(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
+    private final Logger logger = Logger.getLogger(ShoppingCartServiceImpl.class);
 
     /**
      * If product is in the map just increment quantity by 1. If product is not in
@@ -71,18 +70,22 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public void checkout() throws NotEnoughProductsInStockException {
+    public BigDecimal checkout() throws NotEnoughProductsInStockException {
         Product product;
+        BigDecimal totalAmount = new BigDecimal(0.0d);
         for (Map.Entry<Product, Integer> entry : products.entrySet()) {
             product = productRepository.findOne(entry.getKey().getId());
             if (entry.getValue() > product.getQuantity()) {
                 throw new NotEnoughProductsInStockException(product);
             }
-            entry.getKey().setQuantity(product.getQuantity() - entry.getValue());
+            int decrementQuantity = product.getQuantity() - entry.getValue();
+            totalAmount = totalAmount.add(new BigDecimal(decrementQuantity).multiply(product.getPrice()));
+            entry.getKey().setQuantity(decrementQuantity);
         }
         productRepository.save(products.keySet());
         productRepository.flush();
         products.clear();
+        return totalAmount;
     }
 
     @Override

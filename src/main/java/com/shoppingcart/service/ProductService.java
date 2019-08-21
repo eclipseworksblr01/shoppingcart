@@ -8,9 +8,7 @@ import com.shoppingcart.model.Product;
 import java.util.Optional;
 
 public interface ProductService {
-
     public Optional<Product> findById(Long id);
 
     public Page<Product> findAllProductsPageable(Pageable pageable);
-
 }

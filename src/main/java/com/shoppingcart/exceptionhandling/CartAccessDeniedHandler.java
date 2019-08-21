@@ -15,6 +15,7 @@ import java.io.IOException;
 
 @Component
 public class CartAccessDeniedHandler implements AccessDeniedHandler {
+    
     private static Logger logger = LoggerFactory.getLogger(CartAccessDeniedHandler.class);
 
     @Override

@@ -4,30 +4,26 @@ import com.shoppingcart.model.User;
 import com.shoppingcart.repository.RoleRepository;
 import com.shoppingcart.repository.UserRepository;
 import com.shoppingcart.service.UserService;
-
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.Optional;
 
-
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
-
-    private static final String USER_ROLE = "ROLE_USER";
+    private final Logger logger = Logger.getLogger(UserServiceImpl.class);
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-            PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+    UserRepository userRepository;
+    @Autowired
+    RoleRepository roleRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    private static final String USER_ROLE = "ROLE_USER";
 
     @Override
     public Optional<User> findByUsername(String username) {

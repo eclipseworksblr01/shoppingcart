@@ -1,5 +1,6 @@
 package com.shoppingcart.controller;
 
+import org.apache.log4j.Logger;
 import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,8 @@ import org.springframework.web.servlet.ModelAndView;
 public class CartErrorController implements ErrorController {
 
     private static final String PATH = "/error";
+    
+    private final Logger logger = Logger.getLogger(CartErrorController.class);
 
     @RequestMapping(PATH)
     public ModelAndView error() {

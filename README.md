@@ -2,15 +2,24 @@
 
 ## About
 
-This is a demo project for practicing Spring + Thymeleaf. The idea was to build some basic shopping cart web app.
+This is a shopping-cart application which has payments integration using stripe.  It also uses the combination of Spring + Thymeleaf. Users can shop for products. Each user has his own shopping cart (session functionality).
+Checkout is transactional. The payment service integration is with stripe. There is an additional  login and registration functionality also included. 
 
-It was made using **Spring Boot**, **Spring Security**, **Thymeleaf**, **Spring Data JPA**, **Spring Data REST and Docker**. 
-Database is in memory **H2**.
+## Design
 
-There is a login and registration functionality included.
+1) This is an spring boot application built with an authentication mechanism. 
 
-Users can shop for products. Each user has his own shopping cart (session functionality).
-Checkout is transactional.
+2) The login,home-page loading and checkout and payments are reflected with corresponding controllers in the Controller Layer in the design. 
+
+3) The user management and shopping-cart(checkout,payment) functionality are represented by corresponding services in the Services layer in the design.
+
+4) The database schema consists of User,Product and Role. There is an mirroring model layer defined to represent these entities. 
+
+5) There is a repository layer consisting of three repository for product,user and roles. 
+
+6) The sequence of calls from UI is of the following pattern **Controller**->**Service**->**Repository**->**CRUD** on H2 Database
+
+7) This implementation utilizes **Spring Boot**, **Spring Security**, **Thymeleaf**, **Spring Data JPA**, **Spring Data REST and Docker**. Database is in memory **H2**. 
 
 ## Configuration
 

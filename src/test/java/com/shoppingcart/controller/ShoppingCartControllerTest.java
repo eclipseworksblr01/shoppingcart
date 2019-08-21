@@ -22,10 +22,12 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
-import com.shoppingcart.exception.NotEnoughProductsInStockException;
+import com.shoppingcart.model.ChargeRequest;
 import com.shoppingcart.model.Product;
+import com.shoppingcart.service.PaymentsService;
 import com.shoppingcart.service.ProductService;
 import com.shoppingcart.service.ShoppingCartService;
+import com.stripe.model.Charge;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ShoppingCartControllerTest {
@@ -35,6 +37,9 @@ public class ShoppingCartControllerTest {
 
     @Mock
     ShoppingCartService shoppingCartService;
+
+    @Mock
+    PaymentsService paymentsService;
 
     @Mock
     ProductService productService;
@@ -48,11 +53,21 @@ public class ShoppingCartControllerTest {
         product1.setId(new Random().nextLong());
         Product product2 = new Product();
         product2.setId(new Random().nextLong());
+        Charge charge = new Charge();
+        charge.setId("charge_id");
+        charge.setStatus("charge_status");
         productMapping.put(product1, 25);
         productMapping.put(product2, 26);
         when(shoppingCartService.getProductsInCart()).thenReturn(productMapping);
-        when(shoppingCartService.getTotal()).thenReturn(new BigDecimal(2));
+        BigDecimal totalProducts = new BigDecimal(2);
+        BigDecimal totalAmount = new BigDecimal(150.0d);
+        when(shoppingCartService.getTotal()).thenReturn(totalProducts);
         when(productService.findById(anyLong())).thenReturn(Optional.of(product1));
+        try {
+            when(paymentsService.charge(any(ChargeRequest.class))).thenReturn(charge);
+            when(shoppingCartService.checkout()).thenReturn(totalAmount);
+        } catch (Exception e) {
+        }
     }
 
     @After
@@ -87,14 +102,18 @@ public class ShoppingCartControllerTest {
 
     @Test
     public void testCheckout() {
-        shoppingCartController.checkout();
         try {
+            ModelAndView modelAndView = shoppingCartController.checkout();
             verify(shoppingCartService, times(1)).checkout();
-        } catch (NotEnoughProductsInStockException e) {
+            verify(paymentsService, times(1)).charge(any(ChargeRequest.class));
+            assertNotNull(modelAndView);
+            ModelMap modelMap = modelAndView.getModelMap();
+            assertEquals(modelMap.get("id"), "charge_id");
+            assertEquals(modelMap.get("status"), "charge_status");
+        } catch (Exception e) {
             assertTrue(false);
             return;
         }
-        assertTrue(true);
     }
 
 }
