@@ -1,11 +1,10 @@
 # Spring Boot Shopping Cart Web App
 
-## About
+## About the functionality
 
-This is a shopping-cart application which has payments integration using stripe.  It also uses the combination of Spring + Thymeleaf. Users can shop for products. Each user has his own shopping cart (session functionality).
-Checkout is transactional. The payment service integration is with stripe. There is an additional  login and registration functionality also included. 
+This is a shopping-cart application which has payments integration using stripe. Users can shop for products. Each user has his own shopping cart (session functionality).Checkout is transactional. The payment service integration is with stripe. There is an additional  login and registration functionality also included.  
 
-## Component Design
+## Component Design 
 
 1) Controller Implementations(HomeController,LoginController,ShoppingCartController)
 
@@ -31,7 +30,9 @@ Checkout is transactional. The payment service integration is with stripe. There
 
 6) The sequence of calls from UI is of the following pattern 
 
-7) This implementation utilizes **Spring Boot**, **Spring Security**, **Thymeleaf**, **Spring Data JPA**, **Spring Data REST and Docker**. Database is in memory **H2**. 
+## Technical Stack Choices
+
+This implementation utilizes **Spring Boot**, **Spring Security**, **Thymeleaf**, **Spring Data JPA**, **Spring Data REST and Docker**. Database is in memory **H2**. 
 
 ## UI call flow Pattern(Sequence Description)
 
