@@ -7,17 +7,17 @@ Checkout is transactional. The payment service integration is with stripe. There
 
 ## Design
 
-#Components
+##Components
 
-1) Controller
+1) Controller Implementations(HomeController,LoginController,ShoppingCartController)
 
-2) Service Implementations 
+2) Service Implementations(ShoppingCartService,ProductService,UserService,PaymentsService)
 
-3) Repository in JPA
+3) Repository Implementations in JPA(ProductRepository,RoleRepository,UserRepository)
 
-4) Model Layer 
+4) Model Layer(Product,User,Role)
 
-5) ExceptionAdvices for Exception Handling
+5) ExceptionAdvices for Exception Handling 
 
 # Salient points in the design
 
@@ -29,11 +29,15 @@ Checkout is transactional. The payment service integration is with stripe. There
 
 4) The database schema consists of User,Product and Role. There is an mirroring model layer defined to represent these entities. 
 
-5) There is a repository layer consisting of three repository for product,user and roles. 
+5) The repository layer consisting of three repository for product,user and roles. 
 
-6) The sequence of calls from UI is of the following pattern **Controller**->**Service**->**Repository**->**CRUD** on H2 Database
+6) The sequence of calls from UI is of the following pattern 
 
 7) This implementation utilizes **Spring Boot**, **Spring Security**, **Thymeleaf**, **Spring Data JPA**, **Spring Data REST and Docker**. Database is in memory **H2**. 
+
+## UI call flow Pattern(Sequence Description)
+
+**Controller**->**Service**->**Repository**->**CRUD** on H2 Database. 
 
 ## Configuration
 
