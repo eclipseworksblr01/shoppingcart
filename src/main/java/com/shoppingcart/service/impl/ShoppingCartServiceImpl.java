@@ -1,21 +1,21 @@
 package com.shoppingcart.service.impl;
 
-import com.shoppingcart.exception.NotEnoughProductsInStockException;
-import com.shoppingcart.model.Product;
-import com.shoppingcart.repository.ProductRepository;
-import com.shoppingcart.service.ShoppingCartService;
-
-import org.apache.log4j.Logger;
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.log4j.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
-import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import com.shoppingcart.exception.NotEnoughProductsInStockException;
+import com.shoppingcart.logger.ILoggerUtil;
+import com.shoppingcart.model.Product;
+import com.shoppingcart.repository.ProductRepository;
+import com.shoppingcart.service.ShoppingCartService;
 
 @Service
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -25,9 +25,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Autowired
     ProductRepository productRepository;
 
-    private Map<Product, Integer> products = new HashMap<>();
+    @Autowired
+    ILoggerUtil loggerUtil;
 
-    private final Logger logger = Logger.getLogger(ShoppingCartServiceImpl.class);
+    private Map<Product, Integer> products = new HashMap<>();
 
     /**
      * If product is in the map just increment quantity by 1. If product is not in
@@ -37,11 +38,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
      */
     @Override
     public void add(Product product) {
+        loggerUtil.log(Level.INFO, "ShoppingCartServiceImpl", "add", "start", product);
         if (products.containsKey(product)) {
             products.replace(product, products.get(product) + 1);
         } else {
             products.put(product, 1);
         }
+        loggerUtil.log(Level.INFO, "ShoppingCartServiceImpl", "add", "success", product);
     }
 
     /**
@@ -52,6 +55,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
      */
     @Override
     public void remove(Product product) {
+        loggerUtil.log(Level.INFO, "ShoppingCartServiceImpl", "remove", "start", product);
         if (products.containsKey(product)) {
             if (products.get(product) > 1)
                 products.replace(product, products.get(product) - 1);
@@ -59,6 +63,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 products.remove(product);
             }
         }
+        loggerUtil.log(Level.INFO, "ShoppingCartServiceImpl", "remove", "success", product);
     }
 
     /**
@@ -71,11 +76,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public BigDecimal checkout() throws NotEnoughProductsInStockException {
+        loggerUtil.log(Level.INFO, "ShoppingCartServiceImpl", "checkout", "start");
         Product product;
         BigDecimal totalAmount = new BigDecimal(0.0d);
         for (Map.Entry<Product, Integer> entry : products.entrySet()) {
             product = productRepository.findOne(entry.getKey().getId());
             if (entry.getValue() > product.getQuantity()) {
+                loggerUtil.log(Level.ERROR, "ShoppingCartServiceImpl", "checkout", "error",
+                        "Not Enough Products in the Cart");
                 throw new NotEnoughProductsInStockException(product);
             }
             int decrementQuantity = product.getQuantity() - entry.getValue();
@@ -85,6 +93,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         productRepository.save(products.keySet());
         productRepository.flush();
         products.clear();
+        loggerUtil.log(Level.INFO, "ShoppingCartServiceImpl", "checkout", "success");
         return totalAmount;
     }
 

@@ -1,32 +1,26 @@
 package com.shoppingcart.controller;
 
+import com.shoppingcart.logger.ILoggerUtil;
 import com.shoppingcart.model.User;
 import com.shoppingcart.service.UserService;
-
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-
 import java.util.Optional;
-
 import javax.validation.Valid;
 
 @Controller
 public class RegistrationController {
-
-    private final UserService userService;
     
-    private final Logger logger = Logger.getLogger(RegistrationController.class);
+    @Autowired
+    ILoggerUtil loggerUtil;
 
     @Autowired
-    public RegistrationController(UserService userService) {
-        this.userService = userService;
-    }
-
+    UserService userService;
+    
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public ModelAndView registration() {
         ModelAndView modelAndView = new ModelAndView();

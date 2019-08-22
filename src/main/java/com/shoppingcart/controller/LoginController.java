@@ -1,21 +1,25 @@
 package com.shoppingcart.controller;
 
-import org.apache.log4j.Logger;
+import java.security.Principal;
+
+import org.apache.log4j.Level;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.security.Principal;
+import com.shoppingcart.logger.ILoggerUtil;
 
 @Controller
 public class LoginController {
-    
-    private final Logger logger = Logger.getLogger(LoginController.class);
+    @Autowired
+    ILoggerUtil loggerUtil;
 
     @GetMapping("/login")
     public String login(Principal principal) {
+        loggerUtil.log(Level.INFO, "LoginController", "login", "start");
         if (principal != null) {
             return "redirect:/home";
         }
+        loggerUtil.log(Level.INFO, "LoginController", "login", "success");
         return "/login";
     }
 
