@@ -6,11 +6,11 @@ This is a shopping-cart application which has payments integration using stripe.
 
 ## Component Design 
 
-1) Controller Implementations(HomeController,LoginController,ShoppingCartController)
+1) Controller Layer(HomeController,LoginController,ShoppingCartController)
 
-2) Service Implementations(ShoppingCartService,ProductService,UserService,PaymentsService)
+2) Service Layer(ShoppingCartService,ProductService,UserService,PaymentsService)
 
-3) Repository Implementations in JPA(ProductRepository,RoleRepository,UserRepository)
+3) Repository Layer in JPA(ProductRepository,RoleRepository,UserRepository)
 
 4) Model Layer(Product,User,Role)
 
